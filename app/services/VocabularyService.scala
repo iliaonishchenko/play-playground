@@ -31,5 +31,4 @@ class VocabularyService {
 	def verify(sourceLang: Lang, word: String, targetLang: Lang, translation: String): Boolean = {
 		allVocabulary.contains(Vocabulary(sourceLang, targetLang, word, translation))
 	}
-
 }
