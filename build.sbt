@@ -13,7 +13,7 @@ scalaVersion := "2.12.2"
 val iterateesReactive = "com.typesafe.play" %% "play-iteratees-reactive-streams" % "2.6.1"
 val iterateesExtra = "com.typesafe.play.extras" % "iteratees-extras_2.11" % "1.6.0"
 
-libraryDependencies ++= Seq( jdbc , ehcache , ws , specs2 % Test , guice, iterateesReactive, iterateesExtra)
+libraryDependencies ++= Seq( jdbc , ehcache , ws , specs2 % Test , guice, iterateesReactive, iterateesExtra, filters)
 
 routesImport += "binders.PathBinders._"
 
