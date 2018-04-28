@@ -20,8 +20,17 @@ class Quiz @Inject() (vService: VocabularyService) (implicit system: ActorSystem
 		}
 	}
 
-	def check(sourceLang: Lang, word: String, targetLang: Lang, translation: String) = Action {
-		if(vService.verify(sourceLang, word, targetLang, translation)) Ok else NotAcceptable
+	def check(sourceLang: Lang, word: String, targetLang: Lang, translation: String) = Action { request =>
+		val isCorrect = vService.verify(sourceLang, word, targetLang, translation)
+		val correctScore = request.session.get("correct").map(_.toInt).getOrElse(0)
+		val wrongScore = request.session.get("wrong").map(_.toInt).getOrElse(0)
+		if(isCorrect) Ok.withSession(
+			"correct" -> (correctScore + 1).toString,
+			"wrong" -> wrongScore.toString
+		) else NotAcceptable.withSession(
+			"correct" -> correctScore.toString,
+			"wrong" -> (wrongScore +1).toString
+		)
 	}
 
 	def quizEndpoint(sourceLang: Lang, targetLang: Lang): WebSocket = {

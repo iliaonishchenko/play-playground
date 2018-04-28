@@ -6,6 +6,7 @@ import play.api.http.HttpFilters
 import play.filters.gzip.GzipFilter
 import play.filters.headers.SecurityHeadersFilter
 
-class Filters @Inject() (gz: GzipFilter) extends HttpFilters {
-	val filters = Seq(gz, SecurityHeadersFilter)
+class Filters @Inject() (gz: GzipFilter, scoreFilter: ScoreFilter) extends HttpFilters {
+	println("inside filters")
+	val filters = Seq(scoreFilter, gz, SecurityHeadersFilter())
 }
