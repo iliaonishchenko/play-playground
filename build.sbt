@@ -7,8 +7,10 @@ lazy val `play_example` = (project in file(".")).enablePlugins(PlayScala)
 resolvers += "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases"
       
 resolvers += "Akka Snapshot Repository" at "http://repo.akka.io/snapshots/"
-      
+
+val reactiveMongo = "org.reactivemongo" % "play2-reactivemongo_2.12" % "0.13.0-play26"
+
 scalaVersion := "2.12.2"
 
-libraryDependencies ++= Seq( jdbc , ehcache , ws , specs2 % Test , guice )
+libraryDependencies ++= Seq( jdbc , ehcache , ws , specs2 % Test , guice, reactiveMongo )
 
