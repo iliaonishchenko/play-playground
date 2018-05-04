@@ -1,20 +1,38 @@
 package actors
 
-import akka.actor.{Actor, ActorLogging, ActorRef, Props}
+import akka.actor.{Actor, ActorLogging, ActorRef, Cancellable, Props}
 import messages._
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContextExecutor, Future}
+import scala.concurrent.duration._
 import scala.util.control.NonFatal
 
 class TweetReachComputer (userFollowersCounter: ActorRef,
 													storage: ActorRef) extends Actor with ActorLogging {
-	implicit val executionContext = context.dispatcher
+	implicit val executionContext: ExecutionContextExecutor = context.dispatcher
 
 	var followersCountsByRetweet = Map.empty[FetchedRetweets, List[FollowerCount]]
 
 	import akka.pattern.pipe
 
+	val retryScheduler: Cancellable = context.system.scheduler.schedule(
+		1.second, 20.seconds, self, ResendUnacknowledged
+	)
+
+	override def postStop(): Unit = {
+		retryScheduler.cancel()
+	}
+
 	override def receive: Receive = {
+		case ResendUnacknowledged =>
+			val unackonwledged = followersCountsByRetweet.filterNot {
+				case (retweet, counts) => retweet.retweeters.lengthCompare(counts.size) != 0
+			}
+			unackonwledged.foreach{
+				case (retweet, counts) =>
+					val score = counts.map(_.followersCount).sum
+					storage ! StoreReach(retweet.tweetId, score)
+			}
 		case ComputeReach(tweetId) =>
 			val originalSender = sender()
 			fetchRetweets(tweetId, sender())
@@ -69,3 +87,4 @@ object TweetReachComputer {
 
 case class FetchedRetweets(tweetId: BigInt, retweeters: List[String], client: ActorRef)
 case class RetweetFetchingFailed(tweetId: BigInt, cause: Throwable, client: ActorRef)
+case object ResendUnacknowledged
