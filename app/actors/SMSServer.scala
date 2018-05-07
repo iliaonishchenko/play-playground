@@ -9,6 +9,8 @@ import akka.io.Tcp._
 class SMSServer extends Actor with ActorLogging {
 	import context.system
 
+	println("started")
+
 	IO(Tcp) ! Bind(self, new InetSocketAddress("localhost", 6666))
 
 	override def receive: Receive = {

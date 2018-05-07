@@ -14,7 +14,22 @@ val akkaPersistance = "com.typesafe.akka" %% "akka-persistence" % "2.5.12"
 val akkaSlf4j = "com.typesafe.akka" %% "akka-slf4j" % "2.5.12"
 val akkaActors = "com.typesafe.akka" %% "akka-actor" % "2.5.12"
 val jodaTime = "joda-time" % "joda-time" % "2.9.9"
-
-libraryDependencies ++= Seq( jdbc , ehcache , ws , specs2 % Test , guice, akkaPersistance, akkaSlf4j, jodaTime, akkaActors)
+val jooq = "org.jooq" % "jooq" % "3.10.7"
+val jooqMeta = "org.jooq" % "jooq-codegen-maven" % "3.10.7"
+val jooqCodegenmaven = "org.jooq" % "jooq-codegen-maven" % "3.10.7"
+libraryDependencies ++= Seq(
+	jdbc,
+	ehcache,
+	ws,
+	specs2 % Test,
+	guice,
+	akkaPersistance,
+	akkaSlf4j,
+	jodaTime,
+	akkaActors,
+	jooq,
+	jooqMeta,
+	jooqCodegenmaven
+)
 
 unmanagedResourceDirectories in Test <+=  baseDirectory ( _ /"target/web/public/test" )  
