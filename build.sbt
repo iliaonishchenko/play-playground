@@ -17,6 +17,8 @@ val jodaTime = "joda-time" % "joda-time" % "2.9.9"
 val jooq = "org.jooq" % "jooq" % "3.10.7"
 val jooqMeta = "org.jooq" % "jooq-codegen-maven" % "3.10.7"
 val jooqCodegenmaven = "org.jooq" % "jooq-codegen-maven" % "3.10.7"
+val db = "com.h2database" % "h2" % "1.4.197"
+
 libraryDependencies ++= Seq(
 	jdbc,
 	ehcache,
@@ -29,7 +31,8 @@ libraryDependencies ++= Seq(
 	akkaActors,
 	jooq,
 	jooqMeta,
-	jooqCodegenmaven
+	jooqCodegenmaven,
+	db
 )
 
 unmanagedResourceDirectories in Test <+=  baseDirectory ( _ /"target/web/public/test" )  
