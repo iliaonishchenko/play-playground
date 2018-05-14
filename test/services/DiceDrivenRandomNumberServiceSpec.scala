@@ -1,5 +1,7 @@
 package services
 
+import java.util.concurrent.atomic.AtomicInteger
+
 import org.scalatest.FlatSpec
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Millis, Span}
@@ -24,5 +26,26 @@ class DiceDrivenRandomNumberServiceSpec extends FlatSpec with ScalaFutures with 
     whenReady(randomNumberService.generateRandomNumber) { result =>
       result.should_==(4)
     }
+  }
+
+  it should "be able to cope with problematic dice throws" in {
+    val overzealousDiceThrowingService: DiceService = new DiceService {
+      val counter = new AtomicInteger()
+
+      override def throwDice: Future[Int] = {
+        val count = counter.incrementAndGet()
+        if (count % 2 == 0) {
+          Future.successful(4)
+        } else {
+          Future.failed(new RuntimeException("Dice fell of the table"))
+        }
+      }
+    }
+    val randomNumberService = new DiceDrivenRandomNumberService(overzealousDiceThrowingService)
+
+    whenReady(randomNumberService.generateRandomNumber) { result =>
+      result.should_== (4)
+    }
+
   }
 }
