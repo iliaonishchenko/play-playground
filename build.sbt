@@ -12,6 +12,7 @@ scalaVersion := "2.12.2"
 
 val scalaTest = "org.scalatest" %% "scalatest" % "3.0.5" % Test
 val scalaTestPlus = "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2" % Test
+val akkaTestkit = "com.typesafe.akka" %% "akka-testkit" % "2.5.12" % Test
 
 libraryDependencies ++= Seq(
   jdbc,
@@ -20,6 +21,7 @@ libraryDependencies ++= Seq(
   specs2 % Test,
   scalaTest,
   scalaTestPlus,
+  akkaTestkit,
   guice )
 
 unmanagedResourceDirectories in Test <+=  baseDirectory ( _ /"target/web/public/test" )
